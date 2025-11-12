@@ -3,8 +3,6 @@ package node
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -15,7 +13,7 @@ type SceneLabel struct {
 func NewSceneLabel(s string) (SceneLabel, error) {
 	s = strings.TrimSpace(s)
 	if len(s) > 128 {
-		return SceneLabel{}, errors.New("SceneLabel too long")
+		return SceneLabel{}, ErrSceneLabelTooLong
 	}
 	return SceneLabel{value: s}, nil
 }
@@ -71,6 +69,6 @@ func (l *SceneLabel) Scan(src any) error {
 		*l = x
 		return nil
 	default:
-		return fmt.Errorf("SceneLabel: unsupported Scan type %T", src)
+		return ErrSceneLabelUnsupportedScanType
 	}
 }

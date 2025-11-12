@@ -3,8 +3,6 @@ package event
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"regexp"
 	"strings"
 )
@@ -20,7 +18,7 @@ func NewEventCode(s string) (EventCode, error) {
 	s = strings.ReplaceAll(s, "-", "_")
 	s = strings.ToUpper(s)
 	if !codeRe.MatchString(s) {
-		return EventCode{}, errors.New("EventCode must match ^[A-Z0-9_]{1,64}$")
+		return EventCode{}, ErrInvalidEventCode
 	}
 	return EventCode{value: s}, nil
 }
@@ -92,6 +90,6 @@ func (c *EventCode) Scan(src any) error {
 		*c = x
 		return nil
 	default:
-		return fmt.Errorf("EventCode: unsupported Scan type %T", src)
+		return ErrEventCodeUnsupportedScanType
 	}
 }

@@ -3,8 +3,6 @@ package player
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -15,10 +13,10 @@ type PlayerID struct {
 func NewPlayerID(s string) (PlayerID, error) {
 	s = strings.TrimSpace(s)
 	if s == "" {
-		return PlayerID{}, errors.New("PlayerID must be non-empty")
+		return PlayerID{}, ErrPlayerIDEmpty
 	}
 	if len(s) > 128 {
-		return PlayerID{}, errors.New("PlayerID too long")
+		return PlayerID{}, ErrPlayerIDTooLong
 	}
 	return PlayerID{value: s}, nil
 }
@@ -82,6 +80,6 @@ func (id *PlayerID) Scan(src any) error {
 		*id = x
 		return nil
 	default:
-		return fmt.Errorf("PlayerID: unsupported Scan type %T", src)
+		return ErrPlayerIDUnsupportedScanType
 	}
 }

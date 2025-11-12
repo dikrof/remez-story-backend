@@ -1,6 +1,8 @@
 package node
 
-import "remez_story/domain/entity/event"
+import (
+	"remez_story/domain/entity/event"
+)
 
 type Condition struct {
 	RequireAll  []event.EventID `json:"require_all,omitempty"`

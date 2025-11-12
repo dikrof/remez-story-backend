@@ -1,4 +1,3 @@
-// domain/entity/node/choice_id.go
 package node
 
 import "remez_story/common/domainPrimitive/primitive/id"

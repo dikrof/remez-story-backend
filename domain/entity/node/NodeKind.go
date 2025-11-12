@@ -3,8 +3,6 @@ package node
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -24,7 +22,7 @@ func ParseNodeKind(s string) (NodeKind, error) {
 	case NodeNarration, NodeDialogue, NodeChoice, NodeSystemNotification, NodeChoiceOption:
 		return NodeKind(s), nil
 	default:
-		return "", errors.New("invalid NodeKind")
+		return "", ErrInvalidNodeKind
 	}
 }
 
@@ -80,6 +78,6 @@ func (k *NodeKind) Scan(src any) error {
 		*k = val
 		return nil
 	default:
-		return fmt.Errorf("NodeKind: unsupported Scan type %T", src)
+		return ErrNodeKindUnsupportedScanType
 	}
 }

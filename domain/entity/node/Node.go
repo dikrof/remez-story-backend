@@ -1,12 +1,10 @@
 package node
 
 import (
-	"errors"
-	"fmt"
+	"remez_story/domain/entity/chapter"
+	"remez_story/infrastructure/errors"
 	"strings"
 	"time"
-
-	"remez_story/domain/entity/chapter"
 )
 
 type Node struct {
@@ -47,55 +45,61 @@ func (n *Node) GetNext() (NodeID, bool) {
 }
 
 func (n *Node) Validate() error {
+	errs := errors.NewErrors()
+
 	if n.ID.IsZero() {
-		return errors.New("node ID is required")
+		errs.AddError(ErrNodeIDRequired)
 	}
 
 	if !n.Kind.IsValid() {
-		return errors.New("invalid node kind")
+		errs.AddError(ErrInvalidNodeKind)
 	}
 
 	switch n.Kind {
 	case NodeChoice:
 		if len(n.Choices) == 0 {
-			return errors.New("choice node must have choices")
+			errs.AddError(ErrChoicesRequired)
 		}
 		if n.NextID != nil {
-			return errors.New("choice node cannot have NextID - uses Choices instead")
+			errs.AddError(ErrChoiceNodeHasNextID)
 		}
-		for i, ch := range n.Choices {
+		for _, ch := range n.Choices {
 			if ch.ToNodeID.IsZero() {
-				return fmt.Errorf("choice[%d]: ToNodeID is required", i)
+				errs.AddError(ErrChoiceToNodeIDRequired)
 			}
 			if strings.TrimSpace(ch.Text) == "" {
-				return fmt.Errorf("choice[%d]: text is required", i)
+				errs.AddError(ErrChoiceTextIsRequired)
 			}
 		}
 
 	case NodeChoiceOption:
 		if strings.TrimSpace(n.Text) == "" {
-			return errors.New("choice option must have text")
+			errs.AddError(ErrTextRequired)
 		}
 
 	case NodeNarration, NodeDialogue:
 		if strings.TrimSpace(n.Text) == "" {
-			return errors.New("text is required")
+			errs.AddError(ErrTextRequired)
 		}
 
 	case NodeSystemNotification:
 		if strings.TrimSpace(n.Text) == "" {
-			return errors.New("notification text is required")
+			errs.AddError(ErrTextRequired)
 		}
 
 		if n.NextID != nil {
-			return errors.New("system notification should not have NextID")
+			errs.AddError(ErrSystemNotificationHasNextID)
 		}
 	}
 
-	for i, edge := range n.Conditional {
+	for _, edge := range n.Conditional {
 		if edge.ToNodeID.IsZero() {
-			return fmt.Errorf("conditional[%d]: ToNodeID is required", i)
+			errs.AddError(ErrConditionalToNodeIDRequired)
 		}
+	}
+
+	if errs.IsPresent() {
+		return errs
 	}
 
 	return nil

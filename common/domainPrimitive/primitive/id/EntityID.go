@@ -3,8 +3,6 @@ package id
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -15,17 +13,22 @@ type EntityID struct {
 
 func NewEntityID(v int64) (EntityID, error) {
 	if v <= 0 {
-		return EntityID{}, errors.New("EntityID must be > 0")
+		return EntityID{}, ErrInvalidEntityID
 	}
 	return EntityID{value: v}, nil
 }
 
 func EntityIDFrom(s string) (EntityID, error) {
 	s = strings.TrimSpace(s)
+	if s == "" {
+		return EntityID{}, ErrEntityIDIsEmpty
+	}
+
 	n, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
-		return EntityID{}, err
+		return EntityID{}, ErrCreateEntityID(s)
 	}
+
 	return NewEntityID(n)
 }
 
@@ -109,6 +112,6 @@ func (x *EntityID) Scan(src any) error {
 		*x = v
 		return nil
 	default:
-		return fmt.Errorf("EntityID: unsupported Scan type %T", src)
+		return ErrUnsupportedScanType
 	}
 }
