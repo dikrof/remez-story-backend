@@ -55,14 +55,15 @@ func (n *Node) Validate() error {
 		errs.AddError(ErrInvalidNodeKind)
 	}
 
-	switch n.Kind {
-	case NodeChoice:
+	if n.Kind.RequiresText() && strings.TrimSpace(n.Text) == "" {
+		errs.AddError(ErrTextRequired)
+	}
+
+	if n.Kind.MustHaveChoices() {
 		if len(n.Choices) == 0 {
 			errs.AddError(ErrChoicesRequired)
 		}
-		if n.NextID != nil {
-			errs.AddError(ErrChoiceNodeHasNextID)
-		}
+
 		for _, ch := range n.Choices {
 			if ch.ToNodeID.IsZero() {
 				errs.AddError(ErrChoiceToNodeIDRequired)
@@ -71,25 +72,10 @@ func (n *Node) Validate() error {
 				errs.AddError(ErrChoiceTextIsRequired)
 			}
 		}
+	}
 
-	case NodeChoiceOption:
-		if strings.TrimSpace(n.Text) == "" {
-			errs.AddError(ErrTextRequired)
-		}
-
-	case NodeNarration, NodeDialogue:
-		if strings.TrimSpace(n.Text) == "" {
-			errs.AddError(ErrTextRequired)
-		}
-
-	case NodeSystemNotification:
-		if strings.TrimSpace(n.Text) == "" {
-			errs.AddError(ErrTextRequired)
-		}
-
-		if n.NextID != nil {
-			errs.AddError(ErrSystemNotificationHasNextID)
-		}
+	if !n.Kind.CanHaveNext() && n.NextID != nil {
+		errs.AddError(ErrInvalidNextID)
 	}
 
 	for _, edge := range n.Conditional {

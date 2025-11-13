@@ -101,24 +101,16 @@ func (b *NodeBuilder) checkRequiredFields() {
 		b.errors.AddError(ErrInvalidNodeKind)
 	}
 
-	switch b.node.Kind {
-	case NodeChoice:
-		if len(b.node.Choices) == 0 {
-			b.errors.AddError(ErrChoicesRequired)
-		}
-		if b.node.NextID != nil {
-			b.errors.AddError(ErrChoiceNodeHasNextID)
-		}
+	if b.node.Kind.RequiresText() && b.node.Text == "" {
+		b.errors.AddError(ErrTextRequired)
+	}
 
-	case NodeNarration, NodeDialogue:
-		if b.node.Text == "" {
-			b.errors.AddError(ErrTextRequired)
-		}
+	if b.node.Kind.MustHaveChoices() && len(b.node.Choices) == 0 {
+		b.errors.AddError(ErrChoicesRequired)
+	}
 
-	case NodeSystemNotification:
-		if b.node.Text == "" {
-			b.errors.AddError(ErrTextRequired)
-		}
+	if !b.node.Kind.CanHaveNext() && b.node.NextID != nil {
+		b.errors.AddError(ErrInvalidNextID)
 	}
 }
 

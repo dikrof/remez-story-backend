@@ -31,6 +31,33 @@ func (k NodeKind) IsValid() bool {
 	return err == nil
 }
 
+func (k NodeKind) RequiresText() bool {
+	return k == NodeNarration ||
+		k == NodeDialogue ||
+		k == NodeSystemNotification ||
+		k == NodeChoiceOption
+}
+
+func (k NodeKind) CanHaveNext() bool {
+	return k != NodeChoice && k != NodeSystemNotification
+}
+
+func (k NodeKind) MustHaveChoices() bool {
+	return k == NodeChoice
+}
+
+func (k NodeKind) CanHaveSpeaker() bool {
+	return k == NodeDialogue
+}
+
+func (k NodeKind) IsInteractive() bool {
+	return k == NodeChoice
+}
+
+func (k NodeKind) IsSystemGenerated() bool {
+	return k == NodeSystemNotification
+}
+
 func (k NodeKind) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(k))
 }

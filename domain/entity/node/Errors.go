@@ -5,7 +5,6 @@ import "remez_story/infrastructure/errors"
 var (
 	ErrNodeIDRequired                = errors.NewError("NODE-001", "Node ID is required")
 	ErrInvalidNodeKind               = errors.NewError("NODE-002", "Invalid node kind")
-	ErrChoiceNodeHasNextID           = errors.NewError("NODE-003", "Choice node cannot have NextID")
 	ErrChoicesRequired               = errors.NewError("NODE-004", "Choice node must have choices")
 	ErrTextRequired                  = errors.NewError("NODE-005", "Node text is required")
 	ErrChapterIDRequired             = errors.NewError("NODE-006", "Chapter ID is required")
@@ -17,6 +16,6 @@ var (
 	ErrSceneLabelUnsupportedScanType = errors.NewError("NODE-012", "SceneLabel: unsupported Scan type")
 	ErrChoiceToNodeIDRequired        = errors.NewError("NODE-013", "Choice ToNodeID is required")
 	ErrChoiceTextIsRequired          = errors.NewError("NODE-014", "Choice text is required")
-	ErrSystemNotificationHasNextID   = errors.NewError("NODE-015", "System notification should not have NextID")
 	ErrConditionalToNodeIDRequired   = errors.NewError("NODE-016", "Conditional ToNodeID is required")
+	ErrInvalidNextID                 = errors.NewError("NODE-017", "This node kind cannot have NextID")
 )
