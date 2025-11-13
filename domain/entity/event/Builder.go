@@ -1,6 +1,10 @@
 package event
 
-import "remez_story/infrastructure/errors"
+import (
+	"remez_story/common/domainPrimitive/primitive/description"
+	"remez_story/common/domainPrimitive/primitive/title"
+	"remez_story/infrastructure/errors"
+)
 
 type EventBuilder struct {
 	event  *Event
@@ -24,13 +28,33 @@ func (b *EventBuilder) Code(code EventCode) *EventBuilder {
 	return b
 }
 
-func (b *EventBuilder) Title(title string) *EventBuilder {
-	b.event.Title = title
+func (b *EventBuilder) Title(titleText string) *EventBuilder {
+	t, err := title.NewTitle(titleText)
+	if err != nil {
+		b.errors.AddError(err)
+		return b
+	}
+	b.event.Title = t
 	return b
 }
 
-func (b *EventBuilder) Description(description string) *EventBuilder {
-	b.event.Description = description
+func (b *EventBuilder) TitleValue(t title.Title) *EventBuilder {
+	b.event.Title = t
+	return b
+}
+
+func (b *EventBuilder) Description(descText string) *EventBuilder {
+	d, err := description.NewDescription(descText)
+	if err != nil {
+		b.errors.AddError(err)
+		return b
+	}
+	b.event.Description = d
+	return b
+}
+
+func (b *EventBuilder) DescriptionValue(d description.Description) *EventBuilder {
+	b.event.Description = d
 	return b
 }
 
