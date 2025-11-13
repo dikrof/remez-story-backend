@@ -1,9 +1,8 @@
 package player
 
 import (
-	"time"
-
 	"remez_story/domain/entity/node"
+	commonTime "remez_story/infrastructure/tools/time"
 )
 
 type Progress struct {
@@ -11,15 +10,15 @@ type Progress struct {
 	CurrentNodeID *node.NodeID
 	State         State
 	Decisions     []DecisionRecord
-	StartedAt     time.Time
-	UpdatedAt     time.Time
+	StartedAt     *commonTime.Time
+	UpdatedAt     *commonTime.Time
 }
 
 func (p *Progress) Reset(to node.NodeID) {
 	p.CurrentNodeID = &to
 	p.State = NewState()
 	p.Decisions = nil
-	now := time.Now().UTC()
+	now := commonTime.Now()
 	p.StartedAt = now
 	p.UpdatedAt = now
 }

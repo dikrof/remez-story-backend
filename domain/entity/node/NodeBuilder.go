@@ -1,10 +1,9 @@
 package node
 
 import (
-	"time"
-
 	"remez_story/domain/entity/chapter"
 	"remez_story/infrastructure/errors"
+	commonTime "remez_story/infrastructure/tools/time"
 )
 
 type NodeBuilder struct {
@@ -69,12 +68,12 @@ func (b *NodeBuilder) Version(version int) *NodeBuilder {
 	return b
 }
 
-func (b *NodeBuilder) CreatedAt(createdAt time.Time) *NodeBuilder {
+func (b *NodeBuilder) CreatedAt(createdAt *commonTime.Time) *NodeBuilder {
 	b.node.CreatedAt = createdAt
 	return b
 }
 
-func (b *NodeBuilder) UpdatedAt(updatedAt time.Time) *NodeBuilder {
+func (b *NodeBuilder) UpdatedAt(updatedAt *commonTime.Time) *NodeBuilder {
 	b.node.UpdatedAt = updatedAt
 	return b
 }
@@ -124,13 +123,13 @@ func (b *NodeBuilder) checkRequiredFields() {
 }
 
 func (b *NodeBuilder) fillDefaultFields() {
-	now := time.Now()
+	now := commonTime.Now()
 
-	if b.node.CreatedAt.IsZero() {
+	if b.node.CreatedAt == nil || b.node.CreatedAt.IsZero() {
 		b.node.CreatedAt = now
 	}
 
-	if b.node.UpdatedAt.IsZero() {
+	if b.node.UpdatedAt == nil || b.node.UpdatedAt.IsZero() {
 		b.node.UpdatedAt = now
 	}
 

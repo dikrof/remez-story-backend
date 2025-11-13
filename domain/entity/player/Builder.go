@@ -1,10 +1,9 @@
 package player
 
 import (
-	"time"
-
 	"remez_story/domain/entity/node"
 	"remez_story/infrastructure/errors"
+	commonTime "remez_story/infrastructure/tools/time"
 )
 
 type ProgressBuilder struct {
@@ -39,12 +38,12 @@ func (b *ProgressBuilder) Decisions(decisions []DecisionRecord) *ProgressBuilder
 	return b
 }
 
-func (b *ProgressBuilder) StartedAt(startedAt time.Time) *ProgressBuilder {
+func (b *ProgressBuilder) StartedAt(startedAt *commonTime.Time) *ProgressBuilder {
 	b.progress.StartedAt = startedAt
 	return b
 }
 
-func (b *ProgressBuilder) UpdatedAt(updatedAt time.Time) *ProgressBuilder {
+func (b *ProgressBuilder) UpdatedAt(updatedAt *commonTime.Time) *ProgressBuilder {
 	b.progress.UpdatedAt = updatedAt
 	return b
 }
@@ -66,13 +65,13 @@ func (b *ProgressBuilder) checkRequiredFields() {
 }
 
 func (b *ProgressBuilder) fillDefaultFields() {
-	now := time.Now().UTC()
+	now := commonTime.Now()
 
-	if b.progress.StartedAt.IsZero() {
+	if b.progress.StartedAt == nil || b.progress.StartedAt.IsZero() {
 		b.progress.StartedAt = now
 	}
 
-	if b.progress.UpdatedAt.IsZero() {
+	if b.progress.UpdatedAt == nil || b.progress.UpdatedAt.IsZero() {
 		b.progress.UpdatedAt = now
 	}
 

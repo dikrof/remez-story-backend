@@ -3,8 +3,8 @@ package node
 import (
 	"remez_story/domain/entity/chapter"
 	"remez_story/infrastructure/errors"
+	commonTime "remez_story/infrastructure/tools/time"
 	"strings"
-	"time"
 )
 
 type Node struct {
@@ -21,8 +21,8 @@ type Node struct {
 	Conditional []ConditionalEdge
 
 	Version   int
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt *commonTime.Time
+	UpdatedAt *commonTime.Time
 }
 
 func (n *Node) SetNext(nextID NodeID) {
