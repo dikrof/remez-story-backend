@@ -41,7 +41,14 @@ func (x EntityID) IsZero() bool {
 }
 
 func (x EntityID) String() string {
+	if x.IsZero() {
+		return ""
+	}
 	return strconv.FormatInt(x.value, 10)
+}
+
+func (x EntityID) Equal(other EntityID) bool {
+	return x.value == other.value
 }
 
 func (x EntityID) MarshalJSON() ([]byte, error) {
@@ -72,6 +79,9 @@ func (x *EntityID) UnmarshalJSON(b []byte) error {
 }
 
 func (x EntityID) Value() (driver.Value, error) {
+	if x.IsZero() {
+		return nil, nil
+	}
 	return x.value, nil
 }
 
@@ -84,6 +94,13 @@ func (x *EntityID) Scan(src any) error {
 	switch t := src.(type) {
 	case int64:
 		v, err := NewEntityID(t)
+		if err != nil {
+			return err
+		}
+		*x = v
+		return nil
+	case int:
+		v, err := NewEntityID(int64(t))
 		if err != nil {
 			return err
 		}

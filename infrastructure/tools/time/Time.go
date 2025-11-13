@@ -126,6 +126,13 @@ func (t *Time) IsZero() bool {
 	return t.Time.IsZero()
 }
 
+func (t *Time) Format(layout string) string {
+	if t == nil || t.IsZero() {
+		return ""
+	}
+	return t.Time.Format(layout)
+}
+
 func (t *Time) Value() (driver.Value, error) {
 	if t == nil || t.IsZero() {
 		return nil, nil

@@ -59,6 +59,8 @@ func (b *ChapterBuilder) Build() (*Chapter, error) {
 		return nil, b.errors
 	}
 
+	b.fillDefaultFields()
+
 	return b.chapter, nil
 }
 
@@ -70,4 +72,7 @@ func (b *ChapterBuilder) checkRequiredFields() {
 	if b.chapter.Title.IsZero() {
 		b.errors.AddError(ErrTitleRequired)
 	}
+}
+
+func (b *ChapterBuilder) fillDefaultFields() {
 }

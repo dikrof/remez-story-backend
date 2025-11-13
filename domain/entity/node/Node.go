@@ -25,6 +25,30 @@ type Node struct {
 	UpdatedAt *commonTime.Time
 }
 
+func (n *Node) GetID() NodeID {
+	return n.ID
+}
+
+func (n *Node) GetChapterID() chapter.ChapterID {
+	return n.ChapterID
+}
+
+func (n *Node) GetKind() NodeKind {
+	return n.Kind
+}
+
+func (n *Node) GetText() string {
+	return n.Text
+}
+
+func (n *Node) GetSpeaker() string {
+	return n.Speaker
+}
+
+func (n *Node) GetVersion() int {
+	return n.Version
+}
+
 func (n *Node) SetNext(nextID NodeID) {
 	n.NextID = &nextID
 }
@@ -42,6 +66,26 @@ func (n *Node) GetNext() (NodeID, bool) {
 		return NodeID{}, false
 	}
 	return *n.NextID, true
+}
+
+func (n *Node) UpdateText(text string) error {
+	if n.Kind.RequiresText() && strings.TrimSpace(text) == "" {
+		return ErrTextRequired
+	}
+	n.Text = text
+	n.Version++
+	n.UpdatedAt = commonTime.Now()
+	return nil
+}
+
+func (n *Node) AddChoice(choice Choice) error {
+	if !n.Kind.MustHaveChoices() {
+		return ErrInvalidNodeKind
+	}
+	n.Choices = append(n.Choices, choice)
+	n.Version++
+	n.UpdatedAt = commonTime.Now()
+	return nil
 }
 
 func (n *Node) Validate() error {

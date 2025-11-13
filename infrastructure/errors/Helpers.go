@@ -40,3 +40,22 @@ func CastOrWrap(err error, orErrorCode ErrorCode) *Error {
 		return NewError(orErrorCode, err.Error())
 	}
 }
+
+func ErrorOrResult[T any](err error, orResult T) (T, error) {
+	if err == nil {
+		return orResult, nil
+	}
+
+	switch err := err.(type) {
+	case *Errors:
+		if err.IsPresent() {
+			var emptyResult T
+			return emptyResult, err
+		} else {
+			return orResult, nil
+		}
+	default:
+		var emptyResult T
+		return emptyResult, err
+	}
+}

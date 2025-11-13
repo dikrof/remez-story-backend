@@ -28,7 +28,17 @@ func (b *NodeBuilder) ChapterID(chapterID chapter.ChapterID) *NodeBuilder {
 	return b
 }
 
-func (b *NodeBuilder) SceneLabel(label SceneLabel) *NodeBuilder {
+func (b *NodeBuilder) SceneLabel(label string) *NodeBuilder {
+	l, err := NewSceneLabel(label)
+	if err != nil {
+		b.errors.AddError(err)
+		return b
+	}
+	b.node.SceneLabel = l
+	return b
+}
+
+func (b *NodeBuilder) SceneLabelValue(label SceneLabel) *NodeBuilder {
 	b.node.SceneLabel = label
 	return b
 }
