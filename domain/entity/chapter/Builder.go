@@ -53,13 +53,16 @@ func (b *ChapterBuilder) DescriptionValue(d description.Description) *ChapterBui
 	return b
 }
 
+func (b *ChapterBuilder) OrderIndex(orderIndex int) *ChapterBuilder {
+	b.chapter.OrderIndex = orderIndex
+	return b
+}
+
 func (b *ChapterBuilder) Build() (*Chapter, error) {
 	b.checkRequiredFields()
 	if b.errors.IsPresent() {
 		return nil, b.errors
 	}
-
-	b.fillDefaultFields()
 
 	return b.chapter, nil
 }
@@ -72,7 +75,4 @@ func (b *ChapterBuilder) checkRequiredFields() {
 	if b.chapter.Title.IsZero() {
 		b.errors.AddError(ErrTitleRequired)
 	}
-}
-
-func (b *ChapterBuilder) fillDefaultFields() {
 }

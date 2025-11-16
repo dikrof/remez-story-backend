@@ -38,6 +38,16 @@ func (b *ProgressBuilder) Decisions(decisions []DecisionRecord) *ProgressBuilder
 	return b
 }
 
+func (b *ProgressBuilder) Money(money int) *ProgressBuilder {
+	b.progress.Money = money
+	return b
+}
+
+func (b *ProgressBuilder) Reputation(reputation Reputation) *ProgressBuilder {
+	b.progress.Reputation = reputation
+	return b
+}
+
 func (b *ProgressBuilder) StartedAt(startedAt *commonTime.Time) *ProgressBuilder {
 	b.progress.StartedAt = startedAt
 	return b
@@ -81,5 +91,9 @@ func (b *ProgressBuilder) fillDefaultFields() {
 
 	if b.progress.Decisions == nil {
 		b.progress.Decisions = []DecisionRecord{}
+	}
+
+	if b.progress.Reputation.Scores == nil {
+		b.progress.Reputation = NewReputation()
 	}
 }

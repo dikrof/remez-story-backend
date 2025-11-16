@@ -10,6 +10,8 @@ type Progress struct {
 	CurrentNodeID *node.NodeID
 	State         State
 	Decisions     []DecisionRecord
+	Money         int
+	Reputation    Reputation
 	StartedAt     *commonTime.Time
 	UpdatedAt     *commonTime.Time
 }
@@ -44,8 +46,17 @@ func (p *Progress) RecordDecision(nodeID node.NodeID, choiceID node.ChoiceID) {
 	p.UpdatedAt = commonTime.Now()
 }
 
-func (p *Progress) ApplyEffects(effects node.Effect) {
-	p.State.ApplyEffect(effects)
+func (p *Progress) ApplyEffects(e node.Effect) {
+	p.State.ApplyEffect(e)
+
+	if e.MoneyDelta != 0 {
+		p.Money += e.MoneyDelta
+	}
+
+	for _, r := range e.Relations {
+		p.Reputation.Add(r.Character, r.Delta)
+	}
+
 	p.UpdatedAt = commonTime.Now()
 }
 

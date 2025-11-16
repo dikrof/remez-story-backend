@@ -4,10 +4,13 @@ CREATE TABLE progress
     current_node_id BIGINT REFERENCES nodes (id) ON DELETE SET NULL,
     state           JSONB        NOT NULL DEFAULT '{"events": []}',
     decisions       JSONB        NOT NULL DEFAULT '[]',
+    money           BIGINT       NOT NULL DEFAULT 0,
+    reputation      JSONB        NOT NULL DEFAULT '{}'::jsonb,
     started_at      TIMESTAMP    NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX idx_progress_current_node ON progress (current_node_id);
 CREATE INDEX idx_progress_state        ON progress USING GIN (state);
+CREATE INDEX idx_progress_reputation   ON progress USING GIN (reputation);
 CREATE INDEX idx_progress_updated_at   ON progress (updated_at);

@@ -27,7 +27,6 @@ type NodeDetailDTO struct {
 	Choices     []*ChoiceDTO          `json:"choices,omitempty"`
 	Conditional []*ConditionalEdgeDTO `json:"conditional,omitempty"`
 	NextID      *int64                `json:"next_id,omitempty"`
-	Version     int                   `json:"version"`
 }
 
 type ChoiceDTO struct {
@@ -38,8 +37,15 @@ type ChoiceDTO struct {
 }
 
 type EffectDTO struct {
-	Add    []int64 `json:"add,omitempty"`
-	Remove []int64 `json:"remove,omitempty"`
+	Add        []int64               `json:"add,omitempty"`
+	Remove     []int64               `json:"remove,omitempty"`
+	MoneyDelta int                   `json:"money_delta,omitempty"`
+	Relations  []ReputationChangeDTO `json:"relations,omitempty"`
+}
+
+type ReputationChangeDTO struct {
+	Character string `json:"character"`
+	Delta     int    `json:"delta"`
 }
 
 type ConditionalEdgeDTO struct {
@@ -49,10 +55,12 @@ type ConditionalEdgeDTO struct {
 }
 
 type PlayerStateDTO struct {
-	PlayerID       string  `json:"player_id"`
-	ActiveEvents   []int64 `json:"active_events"`
-	DecisionsCount int     `json:"decisions_count"`
-	CurrentChapter int     `json:"current_chapter"`
+	PlayerID       string         `json:"player_id"`
+	ActiveEvents   []int64        `json:"active_events"`
+	DecisionsCount int            `json:"decisions_count"`
+	CurrentChapter int            `json:"current_chapter"`
+	Money          int            `json:"money"`
+	Reputation     map[string]int `json:"reputation"`
 }
 
 type ChapterInfoDTO struct {

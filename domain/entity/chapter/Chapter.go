@@ -9,6 +9,7 @@ type Chapter struct {
 	ID          ChapterID
 	Title       title.Title
 	Description description.Description
+	OrderIndex  int
 }
 
 func (c *Chapter) GetID() ChapterID {
@@ -21,4 +22,8 @@ func (c *Chapter) GetTitle() title.Title {
 
 func (c *Chapter) GetDescription() description.Description {
 	return c.Description
+}
+
+func (c *Chapter) GetOrderIndex() int {
+	return c.OrderIndex
 }

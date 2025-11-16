@@ -6,14 +6,11 @@ import (
 )
 
 var (
-	ErrEntityIDIsEmpty     = errors.NewError("02e4e913-001", "Entity id is empty")
-	ErrInvalidEntityID     = errors.NewError("02e4e913-002", "Entity id must be > 0")
-	ErrUnsupportedScanType = errors.NewError("02e4e913-003", "EntityID: unsupported Scan type")
-
-	CreateEntityIDErrorCode = errors.ErrorCode("02e4e913-004")
+	ErrInvalidEntityID     = errors.NewError("ID-001", "Invalid entity ID: must be positive")
+	ErrEntityIDIsEmpty     = errors.NewError("ID-002", "Entity ID string is empty")
+	ErrUnsupportedScanType = errors.NewError("ID-003", "EntityID: unsupported Scan type")
 )
 
-func ErrCreateEntityID(invalidID string) error {
-	errMsg := fmt.Sprintf("Fail create entityID from string = %q", invalidID)
-	return errors.NewError(CreateEntityIDErrorCode, errMsg)
+func ErrCreateEntityID(value string) *errors.Error {
+	return errors.NewError("ID-004", fmt.Sprintf("Failed to create EntityID from string: %q", value))
 }

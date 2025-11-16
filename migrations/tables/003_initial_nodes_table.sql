@@ -17,9 +17,6 @@ CREATE TABLE nodes
     next_id     BIGINT      REFERENCES nodes (id) ON DELETE SET NULL,
     choices     JSONB,
     conditional JSONB,
-    version     INT         NOT NULL DEFAULT 1,
-    created_at  TIMESTAMP   NOT NULL DEFAULT NOW(),
-    updated_at  TIMESTAMP   NOT NULL DEFAULT NOW(),
 
     CONSTRAINT check_choice_has_choices CHECK (
         (kind != 'CHOICE')

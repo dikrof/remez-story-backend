@@ -3,7 +3,6 @@ package node
 import (
 	"remez_story/domain/entity/chapter"
 	"remez_story/infrastructure/errors"
-	commonTime "remez_story/infrastructure/tools/time"
 	"strings"
 )
 
@@ -19,10 +18,6 @@ type Node struct {
 
 	Choices     []Choice
 	Conditional []ConditionalEdge
-
-	Version   int
-	CreatedAt *commonTime.Time
-	UpdatedAt *commonTime.Time
 }
 
 func (n *Node) GetID() NodeID {
@@ -43,10 +38,6 @@ func (n *Node) GetText() string {
 
 func (n *Node) GetSpeaker() string {
 	return n.Speaker
-}
-
-func (n *Node) GetVersion() int {
-	return n.Version
 }
 
 func (n *Node) SetNext(nextID NodeID) {
@@ -73,8 +64,6 @@ func (n *Node) UpdateText(text string) error {
 		return ErrTextRequired
 	}
 	n.Text = text
-	n.Version++
-	n.UpdatedAt = commonTime.Now()
 	return nil
 }
 
@@ -83,8 +72,6 @@ func (n *Node) AddChoice(choice Choice) error {
 		return ErrInvalidNodeKind
 	}
 	n.Choices = append(n.Choices, choice)
-	n.Version++
-	n.UpdatedAt = commonTime.Now()
 	return nil
 }
 

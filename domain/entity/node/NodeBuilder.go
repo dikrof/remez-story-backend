@@ -3,7 +3,6 @@ package node
 import (
 	"remez_story/domain/entity/chapter"
 	"remez_story/infrastructure/errors"
-	commonTime "remez_story/infrastructure/tools/time"
 )
 
 type NodeBuilder struct {
@@ -73,28 +72,12 @@ func (b *NodeBuilder) Conditional(conditional []ConditionalEdge) *NodeBuilder {
 	return b
 }
 
-func (b *NodeBuilder) Version(version int) *NodeBuilder {
-	b.node.Version = version
-	return b
-}
-
-func (b *NodeBuilder) CreatedAt(createdAt *commonTime.Time) *NodeBuilder {
-	b.node.CreatedAt = createdAt
-	return b
-}
-
-func (b *NodeBuilder) UpdatedAt(updatedAt *commonTime.Time) *NodeBuilder {
-	b.node.UpdatedAt = updatedAt
-	return b
-}
-
 func (b *NodeBuilder) Build() (*Node, error) {
 	b.checkRequiredFields()
 	if b.errors.IsPresent() {
 		return nil, b.errors
 	}
 
-	b.fillDefaultFields()
 	return b.node, nil
 }
 
@@ -121,21 +104,5 @@ func (b *NodeBuilder) checkRequiredFields() {
 
 	if !b.node.Kind.CanHaveNext() && b.node.NextID != nil {
 		b.errors.AddError(ErrInvalidNextID)
-	}
-}
-
-func (b *NodeBuilder) fillDefaultFields() {
-	now := commonTime.Now()
-
-	if b.node.CreatedAt == nil || b.node.CreatedAt.IsZero() {
-		b.node.CreatedAt = now
-	}
-
-	if b.node.UpdatedAt == nil || b.node.UpdatedAt.IsZero() {
-		b.node.UpdatedAt = now
-	}
-
-	if b.node.Version == 0 {
-		b.node.Version = 1
 	}
 }
